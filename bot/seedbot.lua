@@ -218,7 +218,7 @@ function create_config( )
     "lock_fwd",
     "info",
     "expire",
-    "filter",,
+    "filter",
     "setlang",
     "TDshield",
     "supergroup",
