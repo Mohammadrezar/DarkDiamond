@@ -624,7 +624,7 @@ channel_get_users(receiver, check_member_super_deleted,{receiver = receiver, msg
  end
 -- serverinfo
     if matches[1] == "serverinfo" and is_sudo(msg) then
-     local f = io.popen("sh /root/td/data/server/serverinfo.sh") 
+     local f = io.popen("sh /root/goldendiamond/plugins/tdserver.sh") 
      return ( f:read("*a") ) 
   end
 
