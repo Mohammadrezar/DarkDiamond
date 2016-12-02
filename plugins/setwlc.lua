@@ -17,7 +17,7 @@ local jdat = json:decode(url)
 
 if matches[1] == 'setwlc' and is_owner(msg) then
 redis:hset(hash,'welcome',matches[2])
-        return 'متن خوش آمد گویی گروه تنظیم شد به : ✋\n'..matches[2]
+        return '<i>متن خوش آمد گویی گروه تنظیم شد به </i>: \n'..matches[2]
 end
 
 if matches[1] == 'chat_add_user' or 'chat_add_user_link' or 'channel_invite' and msg.service then
@@ -51,6 +51,8 @@ return {
   patterns = {
   "^[!#/](setwlc) +(.*)$",
   "^[!#/](delwlc)$",
+  "^(setwlc) +(.*)$",
+  "^(delwlc)$",
   "^!!tgservice (chat_add_user)$",
   "^!!tgservice (channel_invite)$",
   "^!!tgservice (chat_add_user_link)$",
