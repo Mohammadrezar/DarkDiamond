@@ -26,7 +26,10 @@ return {
   patterns = {
     "^[!#/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ff][Aa])$",
   "^[!#/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ee][Nn])$",
-  "^[!#/]([Ll][Aa][Nn][Gg])"
+  "^[!#/]([Ll][Aa][Nn][Gg])",
+   "^([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ff][Aa])$",
+  "^([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ee][Nn])$",
+  "^([Ll][Aa][Nn][Gg])"
   },
   run = run
 }
