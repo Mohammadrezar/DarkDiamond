@@ -261,7 +261,7 @@ end
 local function topng(msg, success, result)
   local receiver = get_receiver(msg)
   if success then
-    local file = './data/topng/'..msg.from.id..'.png'
+    local file = './data/toTeleDiamond/'..msg.from.id..'.png'
     print('File downloaded to:', result)
     os.rename(result, file)
     print('File moved to:', file)
@@ -275,7 +275,7 @@ end
 local function toaudio(msg, success, result)
   local receiver = get_receiver(msg)
   if success then
-    local file = './data/'..msg.from.id..'.mp3'
+    local file = './data/toTeleDiamond/'..msg.from.id..'.mp3'
     print('File downloaded to:', result)
     os.rename(result, file)
     print('File moved to:', file)
@@ -289,7 +289,7 @@ end
 local function tovoice(msg, success, result) 
   local receiver = get_receiver(msg) 
   if success then 
-    local file = './data/tovoice/'..msg.from.id..'.ogg' 
+    local file = './data/toTeleDiamond/'..msg.from.id..'.ogg' 
     print('File downloaded to:', result) 
     os.rename(result, file) 
     print('File moved to:', file) 
@@ -304,7 +304,7 @@ end
 local function tomkv(msg, success, result)
   local receiver = get_receiver(msg)
   if success then
-    local file = './data/tomkv/'..msg.from.id..'.mkv'
+    local file = './data/toTeleDiamond/'..msg.from.id..'.mkv'
     print('File downloaded to:', result)
     os.rename(result, file)
     print('File moved to:', file)
@@ -318,7 +318,7 @@ end
 local function togif(msg, success, result) 
   local receiver = get_receiver(msg) 
   if success then 
-    local file = './data/togif/'..msg.from.id..'.mp4' 
+    local file = './data/toTeleDiamond/'..msg.from.id..'.mp4' 
     print('File downloaded to:', result) 
     os.rename(result, file) 
     print('File moved to:', file) 
@@ -332,7 +332,7 @@ end
 local function tovideo(msg, success, result)
   local receiver = get_receiver(msg)
   if success then
-    local file = './data/tovideo/'..msg.from.id..'.gif'
+    local file = './data/toTeleDiamond/'..msg.from.id..'.gif'
     print('File downloaded to:', result)
     os.rename(result, file)
     print('File moved to:', file)
@@ -346,7 +346,7 @@ end
 local function toimage(msg, success, result)
   local receiver = get_receiver(msg)
   if success then
-    local file = './data/tophoto/'..msg.from.id..'.jpg'
+    local file = './data/toTeleDiamond/'..msg.from.id..'.jpg'
     print('File downloaded to:', result)
     os.rename(result, file)
     print('File moved to:', file)
@@ -360,7 +360,7 @@ end
 local function tosticker(msg, success, result)
   local receiver = get_receiver(msg)
   if success then
-    local file = './data/tosticker/'..msg.from.id..'.webp'
+    local file = './data/toTeleDiamond/'..msg.from.id..'.webp'
     print('File downloaded to:', result)
     os.rename(result, file)
     print('File moved to:', file)
@@ -624,7 +624,7 @@ channel_get_users(receiver, check_member_super_deleted,{receiver = receiver, msg
  end
 -- serverinfo
     if matches[1] == "serverinfo" and is_sudo(msg) then
-     local f = io.popen("sh /root/goldendiamond/plugins/tdserver.sh") 
+     local f = io.popen("sh /root/td/plugins/tdserver.sh") 
      return ( f:read("*a") ) 
   end
 
