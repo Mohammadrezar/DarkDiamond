@@ -545,4 +545,4 @@ return {
 }
 
 -- by @mrr619
--- ch @antispamandhack
+-- ch @TeleDiamondch
