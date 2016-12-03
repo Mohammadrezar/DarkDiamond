@@ -1,5 +1,5 @@
-local Redis = (loadfile "./system/libs/lua-redis.lua")()
-local FakeRedis = (loadfile "./system/libs/fakeredis.lua")()
+local Redis = (loadfile "./TeleDiamond/libs/lua-redis.lua")()
+local FakeRedis = (loadfile "./TeleDiamond/libs/fakeredis.lua")()
 
 local params = {
   host = '127.0.0.1',
