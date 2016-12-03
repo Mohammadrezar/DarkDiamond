@@ -1,7 +1,7 @@
 local function addword(msg, name)
     local hash = 'chat:'..msg.to.id..':badword'
     redis:hset(hash, name, 'newword')
-    return "🔹کلمه جديد به ليست فيلترشده اضافه شد🔹\n>"..name
+    return "کلمه جدید به فیلتر کلمات اضافه شد\n>"..name
 end
 
 local function get_variables_hash(msg)
@@ -15,7 +15,7 @@ local function list_variablesbad(msg)
 
   if hash then
     local names = redis:hkeys(hash)
-    local text = '🔹لیست کلمات فيلتر شده :\n\n'
+    local text = 'لیست کلمات غیرمجاز :\n\n'
     for i=1, #names do
       text = text..'> '..names[i]..'\n'
     end
@@ -29,7 +29,7 @@ function clear_commandbad(msg, var_name)
   --Save on redis  
   local hash = get_variables_hash(msg)
   redis:del(hash, var_name)
-  return '🔹پاک شدند'
+  return 'پاک شدند'
 end
 
 local function list_variables2(msg, value)
@@ -71,22 +71,22 @@ function clear_commandsbad(msg, cmd_name)
 end
 
 local function run(msg, matches)
-  if matches[2] == 'فیلتر' or matches[2] == 'filter' then
+  if matches[2] == 'filter' then
   if not is_momod(msg) then
-   return 'تنها براي مديران!'
+   return 'only for moderators'
   end
   local name = string.sub(matches[3], 1, 50)
 
   local text = addword(msg, name)
   return text
   end
-  if matches[2] == 'لیست فیلتر' or matches[2] == 'listfilter' then
+  if matches[2] == 'filterlist' then
   return list_variablesbad(msg)
-  elseif matches[2] == 'پاک کردن' or matches[2] == 'clean' then
+  elseif matches[2] == 'clean' then
 if not is_momod(msg) then return '_|_' end
   local asd = '1'
     return clear_commandbad(msg, asd)
-  elseif matches[2] == 'حذف فیلتر' or matches[2] == 'حذف کلمه' or matches[2] == 'rw' then
+  elseif matches[2] == 'unfilter' or matches[2] == 'rw' then
    if not is_momod(msg) then return '_|_' end
     return clear_commandsbad(msg, matches[3])
   else
@@ -98,17 +98,14 @@ end
 
 return {
   patterns = {
-"^()(filter)(.*)$",
-"^()(listfilter)$",
-"^()(rw) (.*)$",
-
-  "^()(حذف کلمه) (.*)$",
-  "^()(فیلتر) (.*)$",
-   "^()(حذف فیلتر) (.*)$",
-    "^()(لیست فیلتر)$",
-    "^()(پاک کردن) لیست فیلتر$",
+   "^([!/#])(rw) (.*)$",
+   "^([!/#])(filter) (.*)$",
+   "^([!/#])(unfilter) (.*)$",
+   "^([!/#])(filterlist)$",
+   "^([!#/])(clean) filterlist$",
 "^(.+)$",
 	   
   },
   run = run
 }
+
