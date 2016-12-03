@@ -1,5 +1,3 @@
---Begin supergrpup.lua
---Check members #Add supergroup
 local function check_member_super(cb_extra, success, result)
   local receiver = cb_extra.receiver
   local data = cb_extra.data
@@ -169,11 +167,11 @@ end
 	--text = text.."\n"..username
 	i = i + 1
 end
-    local file = io.open("./system/chats/lists/supergroups/"..cb_extra.receiver..".txt", "w")
+    local file = io.open("./TeleDiamond/chats/lists/supergroups/"..cb_extra.receiver..".txt", "w")
     file:write(text)
     file:flush()
     file:close()
-    send_document(cb_extra.receiver,"./system/chats/lists/supergroups/"..cb_extra.receiver..".txt", ok_cb, false)
+    send_document(cb_extra.receiver,"./TeleDiamond/chats/lists/supergroups/"..cb_extra.receiver..".txt", ok_cb, false)
 	post_msg(cb_extra.receiver, text, ok_cb, false)
 end
 
@@ -195,11 +193,11 @@ end
 	text = text.."\n"..i.." - "..name.." [ "..v.peer_id.." ]\n"
 	i = i + 1
 end
-    local file = io.open("./system/chats/lists/supergroups/kicked/"..cb_extra.receiver..".txt", "w")
+    local file = io.open("./TeleDiamond/chats/lists/supergroups/kicked/"..cb_extra.receiver..".txt", "w")
     file:write(text)
     file:flush()
     file:close()
-    send_document(cb_extra.receiver,"./system/chats/lists/supergroups/kicked/"..cb_extra.receiver..".txt", ok_cb, false)
+    send_document(cb_extra.receiver,"./TeleDiamond/chats/lists/supergroups/kicked/"..cb_extra.receiver..".txt", ok_cb, false)
 	--send_large_msg(cb_extra.receiver, text)
 end
 
@@ -1632,8 +1630,8 @@ local function run(msg, matches)
 			return '》<code> لطفا لینک گروه خود را ارسال کنید</code>'
 		end
 		
-		one = io.open("./system/team", "r")
-        two = io.open("./system/channel", "r")
+		one = io.open("./TeleDiamond/team", "r")
+        two = io.open("./TeleDiamond/channel", "r")
         local team = one:read("*all")
         local channel = two:read("*all")
 
