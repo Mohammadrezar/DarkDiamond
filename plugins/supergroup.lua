@@ -1,3 +1,5 @@
+--Begin supergrpup.lua
+--Check members #Add supergroup
 local function check_member_super(cb_extra, success, result)
   local receiver = cb_extra.receiver
   local data = cb_extra.data
@@ -167,11 +169,11 @@ end
 	--text = text.."\n"..username
 	i = i + 1
 end
-    local file = io.open("./TeleDiamond/chats/lists/supergroups/"..cb_extra.receiver..".txt", "w")
+    local file = io.open("./system/chats/lists/supergroups/"..cb_extra.receiver..".txt", "w")
     file:write(text)
     file:flush()
     file:close()
-    send_document(cb_extra.receiver,"./TeleDiamond/chats/lists/supergroups/"..cb_extra.receiver..".txt", ok_cb, false)
+    send_document(cb_extra.receiver,"./system/chats/lists/supergroups/"..cb_extra.receiver..".txt", ok_cb, false)
 	post_msg(cb_extra.receiver, text, ok_cb, false)
 end
 
@@ -193,11 +195,11 @@ end
 	text = text.."\n"..i.." - "..name.." [ "..v.peer_id.." ]\n"
 	i = i + 1
 end
-    local file = io.open("./TeleDiamond/chats/lists/supergroups/kicked/"..cb_extra.receiver..".txt", "w")
+    local file = io.open("./system/chats/lists/supergroups/kicked/"..cb_extra.receiver..".txt", "w")
     file:write(text)
     file:flush()
     file:close()
-    send_document(cb_extra.receiver,"./TeleDiamond/chats/lists/supergroups/kicked/"..cb_extra.receiver..".txt", ok_cb, false)
+    send_document(cb_extra.receiver,"./system/chats/lists/supergroups/kicked/"..cb_extra.receiver..".txt", ok_cb, false)
 	--send_large_msg(cb_extra.receiver, text)
 end
 
@@ -249,6 +251,785 @@ local function unlock_group_links(msg, data, target)
     return reply_msg(msg.id,'》قفل لینڪ دَږ سۅپږگږۊه غیږفعال شُد🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
      else 
    return reply_msg(msg.id,'<i>》Link Posting Hasbeen unLocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+  end
+end
+
+  local function lock_group_media(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_media_lock = data[tostring(target)]['settings']['lock_media']
+  if group_media_lock == 'yes' then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قُفل فیلم،عکس،آهنگ دږ سۅپږگږوه فعال بود🔒 \n》توسط: @'..msg.from.username..' '
+    else
+    return '<i>》Media is already locked🔒 \n》Order By: </i>@'..msg.from.username..' '
+  end
+  end
+    data[tostring(target)]['settings']['lock_media'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قُفل فیلم،عکس،آهنگ دږ سۅپږگږوه فعال شُڍ🔒 \n》توسط: @'..msg.from.username..' '
+    else 
+    return '<i>》Media has been locked🔒 \n》Order By: </i>@'..msg.from.username..' '
+  end
+end
+
+local function unlock_group_media(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_media_lock = data[tostring(target)]['settings']['lock_media']
+  if group_media_lock == 'no' then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return  '》قُفل فیلم،عکس،آهنگ دږ سۅپږگږوه غیر فعال بود🔓 \n》توسط: @'..msg.from.username..' '
+   else
+    return '<i>》Media is not locked🔓 \n》Order By: </i>@'..msg.from.username..' '
+    end
+    end
+    data[tostring(target)]['settings']['lock_media'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قُفل فیلم،عکس،آهنگ دږ سۅپږگږوه غیر فعال شُڍ🔓 \n》توسط: '..msg.from.username..' '
+    else
+    return '<i>》Media has been unlocked🔓 \n》Order By: </i>@'..msg.from.username..' '
+  end
+end
+    
+  local function lock_group_fwd(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_fwd_lock = data[tostring(target)]['settings']['lock_fwd']
+  if group_fwd_lock == 'yes' then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return ' 》قُفل فۅږواږد دږ سوپږ گرۅه فعال بود🔒 \n》توسط: @'..msg.from.username..' '
+  else
+    return '<i>》fwd posting is already locked🔒\n》Order By: </i>@'..msg.from.username..' '
+  end
+  end
+    data[tostring(target)]['settings']['lock_fwd'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'fwd:'..msg.to.id
+    redis:set(hash, true)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفل فۅږۅاږد دږ سۅپږ گږۅة فعاڶ شُد🔒 \n》توسط: @'..msg.from.username..' '
+    else
+    return '<i>》Fwd has been locked🔐 \n》Order By: </i>@'..msg.from.username..' '
+  end
+end
+
+local function unlock_group_fwd(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_fwd_lock = data[tostring(target)]['settings']['lock_fwd']
+  if group_fwd_lock == 'no' then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفل فۅږۅاږد دږ سۅپږگږۅة از قبل غیږ فعاڶ شُدہ بۅڍ🔒 \n》توسط: @'..msg.from.username..' '
+  else
+  return '<i>》Fwd is not locked🔓 \n》Order By: </i>@'..msg.from.username..' '
+  end
+  end
+    data[tostring(target)]['settings']['lock_fwd'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'fwd:'..msg.to.id
+    redis:del(hash)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفل فۅږۅاږد دږ سۅپږ گږۅة غیرفعاڶ شُد🔒 \n》توسط: @'..msg.from.username..' '
+    else
+    return '<i>》Fwd has been unlocked🔓 \n》Order By: </i>@'..msg.from.username..' '
+  end
+end
+
+local function lock_group_tag(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_tag_lock = data[tostring(target)]['settings']['lock_tag']
+  if group_tag_lock == 'yes' then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return 'قُفل هشتگ(#) دږ سوپږگږوه فعال بود🔒 \n》توسط: @'..msg.from.username..' '
+  else
+    return '<i>》Tag is already locked🔒 \n》Order By: </i>@'..msg.from.username..' '
+  end
+  end
+    data[tostring(target)]['settings']['lock_tag'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return '》قُفل هشتگ(#) دږ سوپږگږوه فعال شُد🔒 \n》توسط: @'..msg.from.username..' '
+  else
+    return '<i>》Tag has been locked🔒 \n》Order By: </i>@'..msg.from.username..' '
+  end
+end
+
+local function unlock_group_tag(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_tag_lock = data[tostring(target)]['settings']['lock_tag']
+  if group_tag_lock == 'no' then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return '》قُفل هشتگ(#) دږ سوپږگږوه غیر فعال بود🔓 \n》توسط: @'..msg.from.username..' '
+  else
+    return '<i>》Tag is not locked🔓\n》Order By: </i>@'..msg.from.username..' '
+  end
+  end
+    data[tostring(target)]['settings']['lock_tag'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return '》قُفل هشتگ(#) دږ سوپږگږوه غیر فعال شُد🔓 \n》توسط: @'..msg.from.username..' '
+  else
+    return '<i>》Tag has been unlocked🔓 \n》Order By: </i>@'..msg.from.username..' '
+  end
+end
+
+local function lock_group_bots(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_bots_lock = data[tostring(target)]['settings']['lock_bots']
+  if group_bots_lock == 'yes' then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفل وږوڍ رباټ هاے مُخَرِب بہ سوپږگږۅه فعال شُده بوڍ🔒 \n》توسط: @'..msg.from.username..' '
+  else
+  return '<i>》Bots protection is already enabled🔐 \n》Order By: </i>@'..msg.from.username.. ' '
+  end
+  end
+    data[tostring(target)]['settings']['lock_bots'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفل وږوڍ رباټ هاے مُخَرِب بہ سوپږگږۅه فعال شُد🔒 \n》توسط: @'..msg.from.username..' '
+    else
+    return '<i>》Bots protection has been enabled🔐 \n》Order By: </i>@'..msg.from.username.. ' '
+  end
+end
+
+local function unlock_group_bots(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_bots_lock = data[tostring(target)]['settings']['lock_bots']
+  if group_bots_lock == 'no' then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفل وږوڍ رباټ هاے مُخَرِب بہ سوپږگږۅه غیر فعال شُده بود🔓 \n》توسط: @'..msg.from.username..' '
+  else
+  return '<i>》Bots protection is already disabled🔓 \n》Order By: </i>@'..msg.from.username.. ' '
+  end
+  end
+    data[tostring(target)]['settings']['lock_bots'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفل وږوڍ رباټ هاے مُخَرِب بہ سوپږگږۅه غیر فعال شُد🔓 \n》توسط: @'..msg.from.username..' '
+    else
+    return '<i>》Bots protection has been disabled🔓 \n》Order By: </i>@'..msg.from.username.. ' '
+  end
+end
+ -- by @mrr619 TeleDiamond
+  local function lock_group_audio(msg, data, target)
+    local msg_type = 'Audio'
+    local chat_id = msg.to.id
+  if not is_momod(msg) then
+    return
+  end
+  local group_audio_lock = data[tostring(target)]['settings']['lock_audio']
+  if group_audio_lock == 'yes' and is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل آهنگ دَږ سۅپږگږۊه ازقبل فَعال بود🔒 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》Lock Audio is already on🔒\n》Order By</i> @'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_audio'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل آهنگ دَږ سۅپږگږۊه فَعال شد🔒\n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》Audio posting has Been locked🔒\n》Order By</i> @'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+local function unlock_group_audio(msg, data, target)
+  local chat_id = msg.to.id
+  local msg_type = 'Audio'
+  if not is_momod(msg) then
+    return
+  end
+  local group_audio_lock = data[tostring(target)]['settings']['lock_audio']
+  if group_audio_lock == 'no' and not is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل آهنگ دَږ سۅپږگږۊه از قبل غیږفعال بود🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》Audio Posting is already Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_audio'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل آهنگ دَږ سۅپږگږۊه غیږفعال شُد🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》Audio Posting has Been Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+  local function lock_group_photo(msg, data, target)
+    local msg_type = 'Photo'
+    local chat_id = msg.to.id
+  if not is_momod(msg) then
+    return
+  end
+  local group_photo_lock = data[tostring(target)]['settings']['lock_photo']
+  if group_photo_lock == 'yes' and is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل عکس دَږ سۅپږگږۊه ازقبل فَعال بود🔒 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》Lock Photo is already on🔒\n》Order By</i> @'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_photo'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل عکس دَږ سۅپږگږۊه فَعال شد🔒\n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》Photo posting has Been locked🔒\n》Order By</i> @'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+local function unlock_group_photo(msg, data, target)
+  local chat_id = msg.to.id
+  local msg_type = 'Photo'
+  if not is_momod(msg) then
+    return
+  end
+  local group_photo_lock = data[tostring(target)]['settings']['lock_photo']
+  if group_photo_lock == 'no' and not is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل عکس دَږ سۅپږگږۊه از قبل غیږفعال بود🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》Photo Posting is already Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_photo'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل عکس دَږ سۅپږگږۊه غیږفعال شُد🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》Photo Posting has Been Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+  local function lock_group_video(msg, data, target)
+    local msg_type = 'Video'
+    local chat_id = msg.to.id
+  if not is_momod(msg) then
+    return
+  end
+  local group_video_lock = data[tostring(target)]['settings']['lock_video']
+  if group_video_lock == 'yes' and is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل فیلم دَږ سۅپږگږۊه ازقبل فَعال بود🔒 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》Lock Video is already on🔒\n》Order By</i> @'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_video'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل فیلم دَږ سۅپږگږۊه فَعال شد🔒\n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》Video posting has Been locked🔒\n》Order By</i> @'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+local function unlock_group_video(msg, data, target)
+  local chat_id = msg.to.id
+  local msg_type = 'Video'
+  if not is_momod(msg) then
+    return
+  end
+  local group_video_lock = data[tostring(target)]['settings']['lock_video']
+  if group_video_lock == 'no' and not is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل فیلم دَږ سۅپږگږۊه از قبل غیږفعال بود🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》Video Posting is already Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_video'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل فیلم دَږ سۅپږگږۊه غیږفعال شُد🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》Video Posting has Been Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+  local function lock_group_documents(msg, data, target)
+    local msg_type = 'Documents'
+    local chat_id = msg.to.id
+  if not is_momod(msg) then
+    return
+  end
+  local group_documents_lock = data[tostring(target)]['settings']['lock_documents']
+  if group_documents_lock == 'yes' and is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل فایل دَږ سۅپږگږۊه ازقبل فَعال بود🔒 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》Lock Documents is already on🔒\n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_documents'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل فایل دَږ سۅپږگږۊه فَعال شد🔒\n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》Documents posting has Been locked🔒\n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+local function unlock_group_documents(msg, data, target)
+  local chat_id = msg.to.id
+  local msg_type = 'Documents'
+  if not is_momod(msg) then
+    return
+  end
+  local group_documents_lock = data[tostring(target)]['settings']['lock_documents']
+  if group_documents_lock == 'no' and not is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل فایل دَږ سۅپږگږۊه از قبل غیږفعال بود🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》Documents Posting is already Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_documents'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل فایل دَږ سۅپږگږۊه غیږفعال شُد🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》Documents Posting has Been Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+  local function lock_group_text(msg, data, target)
+    local msg_type = 'Text'
+    local chat_id = msg.to.id
+  if not is_momod(msg) then
+    return
+  end
+  local group_text_lock = data[tostring(target)]['settings']['lock_text']
+  if group_text_lock == 'yes' and is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل متن دَږ سۅپږگږۊه ازقبل فَعال بود🔒 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》Lock Text is already on🔒\n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_text'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل متن دَږ سۅپږگږۊه فَعال شد🔒\n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》Text posting has Been locked🔒\n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+local function unlock_group_text(msg, data, target)
+  local chat_id = msg.to.id
+  local msg_type = 'Text'
+  if not is_momod(msg) then
+    return
+  end
+  local group_text_lock = data[tostring(target)]['settings']['lock_text']
+  if group_text_lock == 'no' and not is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل متن دَږ سۅپږگږۊه از قبل غیږفعال بود🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》Text Posting is already Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_text'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل متن دَږ سۅپږگږۊه غیږفعال شُد🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》Text Posting has Been Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+  local function lock_group_all(msg, data, target)
+    local msg_type = 'All'
+    local chat_id = msg.to.id
+  if not is_momod(msg) then
+    return
+  end
+  local group_all_lock = data[tostring(target)]['settings']['lock_all']
+  if group_all_lock == 'yes' and is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل چت از قبل فعال بود🔒 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》All locks is already on🔒\n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_all'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل چت فعال شد🔒\n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》All locks has Been on🔒\n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+local function unlock_group_all(msg, data, target)
+  local chat_id = msg.to.id
+  local msg_type = 'All'
+  if not is_momod(msg) then
+    return
+  end
+  local group_all_lock = data[tostring(target)]['settings']['lock_all']
+  if group_all_lock == 'no' and not is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل چت غیرفعالل بود🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》All Posting is already Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_all'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل چت غیری فعال شد🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》All Posting has Been Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+  local function lock_group_gifs(msg, data, target)
+    local msg_type = 'Gifs'
+    local chat_id = msg.to.id
+  if not is_momod(msg) then
+    return
+  end
+  local group_gifs_lock = data[tostring(target)]['settings']['lock_gifs']
+  if group_gifs_lock == 'yes' and is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل گیف دَږ سۅپږگږۊه ازقبل فَعال بود🔒 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》Lock Gif is already on🔒\n》Order By</i> @'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_gifs'] = 'yes'
+    save_data(_config.moderation.data, data)
+    ute(chat_id, msg_type)
+  local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل گیف دَږ سۅپږگږۊه فَعال شد🔒\n》توسط: @'..msg.from.username..' ', ok_cb, false)
+   else
+    return reply_msg(msg.id,'<i>》Gif posting has Been locked🔒\n》Order By</i> @'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+local function unlock_group_gifs(msg, data, target)
+  local chat_id = msg.to.id
+  local msg_type = 'Gifs'
+  if not is_momod(msg) then
+    return
+  end
+  local group_gifs_lock = data[tostring(target)]['settings']['lock_gifs']
+  if group_gifs_lock == 'no' and not is_muted(chat_id, msg_type..': yes') then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل گیف دَږ سۅپږگږۊه از قبل غیږفعال بود🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》Gif Posting is already Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+  end
+  end
+    if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    data[tostring(target)]['settings']['lock_gifs'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return reply_msg(msg.id,'》قفل گیف دَږ سۅپږگږۊه غیږفعال شُد🔓 \n》توسط: @'..msg.from.username..' ', ok_cb, false)
+    else 
+   return reply_msg(msg.id,'<i>》Gif Posting has Been Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' ', ok_cb, false)
+    end
+  end
+end
+
+local function lock_group_inline(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_inline_lock = data[tostring(target)]['settings']['lock_inline']
+  if group_inline_lock == 'yes' then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفل دکمه شیشه ای فعال بود🔒\n》توسط: @'..msg.from.username..''
+  else
+    return '<i>》Inline Posting is already locked🔒 \n》Order By: </i>@'..msg.from.username..' '
+    end
+    end
+    data[tostring(target)]['settings']['lock_inline'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفله دکمه شیشه ای فعال شد🔒 \n》توسط: @'..msg.from.username..' '
+     else
+    return '<i>》Inline Posting Has Been Locked🔒 \n》Order By: </i>@'..msg.from.username..' '
+  end
+end
+
+local function unlock_group_inline(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_inline_lock = data[tostring(target)]['settings']['lock_inline']
+  if group_inline_lock == 'no' then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return '》قفل دکمه شیشه ای فعال بود🔒\n》توسط: @'..msg.from.username..' '
+    else 
+    return '<i>》Inline Posting is already Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' '
+    end
+    end
+    data[tostring(target)]['settings']['lock_inline'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفل دکمه شیشه ای غیز فعال شد🔓 \n》توسط: @'..msg.from.username..' '
+     else 
+     return '<i>》Inline Posting Hasbeen unLocked🔓 \n》Order By: </i>@'..msg.from.username..' '
+  end
+end
+-- TeleDiamond
+local function lock_group_cmd(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_cmd_lock = data[tostring(target)]['settings']['lock_cmd']
+  if group_cmd_lock == 'yes' then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+   return '》قفل دستورات بسته بود🔒 \n》توسط: @'..msg.from.username..' '
+   else
+    return '<i>》cmds Posting is already locked🔒 \n》Order By: </i>@'..msg.from.username..' '
+    end
+    end
+    data[tostring(target)]['settings']['lock_cmd'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفل دستورات بسته شد🔒 \n》توسط: @'..msg.from.username..' '
+     else
+    return '<i>》cmds Posting Has Been Locked🔒 \n》Order By: </i>@'..msg.from.username..' '
+  end
+end
+
+local function unlock_group_cmd(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_cmd_lock = data[tostring(target)]['settings']['lock_cmd']
+  if group_cmd_lock == 'no' then
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفل دستورات غیرفعال بود🔓 \n》توسط: @'..msg.from.username..' '
+    else 
+    return '<i>》cmds Posting is already Unlocked🔓 \n》Order By: </i>@'..msg.from.username..' '
+    end
+    end
+    data[tostring(target)]['settings']['lock_cmd'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '》قفل دستورات غیر فعال شد🔓 \n》توسط: @'..msg.from.username..' '
+     else 
+     return '<i>》cmds Posting Hasbeen unLocked🔓 \n》Order By: </i>@'..msg.from.username..' '
+  end
+end 
+
+local function is_cmd(jtext)
+    if jtext:match("^[/#!](.*)$") then
+        return true
+    end
+    return false
+end
+
+    local function isABotBadWay (user)
+      local username = user.username or ''
+      return username:match("[Bb]ot$")
+    end
+  
+  local function get_variables_hash(msg)
+
+    return 'chat:'..msg.to.id..':badword'
+
+end 
+
+local function list_variablesbad(msg)
+  local hash = get_variables_hash(msg)
+
+  if hash then
+    local names = redis:hkeys(hash)
+    local text = 'List of words :\n\n'
+    for i=1, #names do
+      text = text..'> '..names[i]..'\n'
+    end
+    return text
+  else
+  return 
+  end
+end
+
+local function list_variables2(msg, value)
+  local hash = get_variables_hash(msg)
+  
+  if hash then
+    local names = redis:hkeys(hash)
+    local text = ''
+    for i=1, #names do
+  if string.match(value, names[i]) and not is_momod(msg) then
+  if msg.to.type == 'channel' then
+  delete_msg(msg.id,ok_cb,false)
+  else
+  kick_user(msg.from.id, msg.to.id)
+
+  end
+return 
+end
+      --text = text..names[i]..'\n'
+    end
   end
 end
 
@@ -880,6 +1661,27 @@ function show_supergroup_settingsmod(msg, target)
 			data[tostring(target)]['settings']['lock_edit'] = 'no'
 		end
 	end
+    if data[tostring(msg.to.id)]['settings']['lock_media'] then
+          lock_media = data[tostring(msg.to.id)]['settings']['lock_media']
+        end
+    if data[tostring(msg.to.id)]['settings']['lock_tag'] then
+          lock_tag = data[tostring(msg.to.id)]['settings']['lock_tag']
+        end
+    if data[tostring(msg.to.id)]['settings']['lock_fwd'] then
+          lock_fwd = data[tostring(msg.to.id)]['settings']['lock_fwd']
+      end
+        if data[tostring(msg.to.id)]['settings']['lock_bots'] then
+          lock_bots = data[tostring(msg.to.id)]['settings']['lock_bots']
+      end
+    if data[tostring(msg.to.id)]['settings']['lock_inline'] then
+          lock_inline = data[tostring(msg.to.id)]['settings']['lock_inline']
+      end
+    if data[tostring(msg.to.id)]['settings']['strict'] then
+          lock_strict = data[tostring(msg.to.id)]['settings']['strict']
+      end
+    if data[tostring(msg.to.id)]['settings']['lock_cmd'] then
+          lock_cmd = data[tostring(msg.to.id)]['settings']['lock_cmd']
+      end
     if data[tostring(target)]['settings'] then
     if not data[tostring(target)]['settings']['username'] then
       data[tostring(target)]['settings']['username'] = 'no'
@@ -1630,8 +2432,8 @@ local function run(msg, matches)
 			return '》<code> لطفا لینک گروه خود را ارسال کنید</code>'
 		end
 		
-		one = io.open("./TeleDiamond/team", "r")
-        two = io.open("./TeleDiamond/channel", "r")
+		one = io.open("./system/team", "r")
+        two = io.open("./system/channel", "r")
         local team = one:read("*all")
         local channel = two:read("*all")
 
@@ -2054,6 +2856,45 @@ local function run(msg, matches)
 			if matches[2] == 'username'or matches[2] == 'ایدی' then
 			    return lock_group_username(msg, data, target)
 		    end
+      if matches[2] == 'media'or matches[2] == 'رسانه' then
+        return lock_group_media(msg, data, target)
+      end
+      if matches[2] == 'fwd'or matches[2] == 'فوروارد' then
+        return lock_group_fwd(msg, data, target)
+      end
+      if matches[2] == 'tag'or matches[2] == 'هشتگ' then
+        return lock_group_tag(msg, data, target)
+      end
+      if matches[2] == 'bots'or matches[2] == 'ربات ها' then
+        return lock_group_bots(msg, data, target)
+      end
+      if matches[2] == 'audio'or matches[2] == 'آهنگ' then
+        return lock_group_audio(msg, data, target)
+      end
+      if matches[2] == 'photo'or matches[2] == 'عکس' then
+        return lock_group_photo(msg, data, target)
+      end
+      if matches[2] == 'video'or matches[2] == 'فیلم' then
+        return lock_group_video(msg, data, target)
+      end
+      if matches[2] == 'documents'or matches[2] == 'فایل' then
+        return lock_group_documents(msg, data, target)
+      end
+      if matches[2] == 'text'or matches[2] == 'متن' then
+        return lock_group_text(msg, data, target)
+      end
+      if matches[2] == 'all'or matches[2] == 'همه' then
+        return lock_group_all(msg, data, target)
+      end
+      if matches[2] == 'gifs'or matches[2] == 'گیف' then
+        return lock_group_gifs(msg, data, target)
+      end
+      if matches[2] == 'inline'or matches[2] == 'اینلاین' then
+        return lock_group_inline(msg, data, target)
+      end
+      if matches[2] == 'cmd'or matches[2] == 'دستورات' then
+        return lock_group_cmd(msg, data, target)
+      end
 			if matches[2] == 'strict'or matches[2] == 'سختگیرانه' then
 				return enable_strict_rules(msg, data, target)
 			end
@@ -2091,6 +2932,45 @@ local function run(msg, matches)
 			if matches[2] == 'username'or matches[2] == 'ایدی' then
 			    return unlock_group_username(msg, data, target)
 		    end
+      if matches[2] == 'media'or matches[2] == 'رسانه' then
+        return unlock_group_media(msg, data, target)
+      end
+      if matches[2] == 'fwd'or matches[2] == 'فوروراد' then
+        return unlock_group_fwd(msg, data, target)
+      end
+      if matches[2] == 'tag'or matches[2] == 'هشتگ' then
+        return unlock_group_tag(msg, data, target)
+      end
+      if matches[2] == 'bots'or matches[2] == 'ربات ها' then
+        return unlock_group_bots(msg, data, target)
+      end
+      if matches[2] == 'audio'or matches[2] == 'آهنگ' then
+        return unlock_group_audio(msg, data, target)
+      end
+      if matches[2] == 'photo'or matches[2] == 'عکس' then
+        return unlock_group_photo(msg, data, target)
+      end
+      if matches[2] == 'video'or matches[2] == 'فیلم' then
+        return unlock_group_video(msg, data, target)
+      end
+      if matches[2] == 'documents'or matches[2] == 'فایل' then
+        return unlock_group_documents(msg, data, target)
+      end
+      if matches[2] == 'text'or matches[2] == 'متن' then
+        return unlock_group_text(msg, data, target)
+      end
+      if matches[2] == 'all'or matches[2] == 'همه' then
+        return unlock_group_all(msg, data, target)
+      end
+      if matches[2] == 'gifs'or matches[2] == 'گیف' then
+        return unlock_group_gifs(msg, data, target)
+      end
+      if matches[2] == 'inline'or matches[2] == 'اینلاین' then
+        return unlock_group_inline(msg, data, target)
+      end
+      if matches[2] == 'cmd' or matches[2] == 'دستورات' then
+        return unlock_group_cmd(msg, data, target)
+      end
 			if matches[2] == 'strict' or matches[2] == 'سختگیرانه' then
 				return disable_strict_rules(msg, data, target)
 			end
