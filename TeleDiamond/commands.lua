@@ -102,7 +102,7 @@ end
 -- will get the text after the last "/" for filename
 -- and content-type for extension
 function download_to_file(url, file_name)
-  print("(@mrr619) file has been saved in: "..url)
+  print("url to download: "..url)
 
   local respbody = {}
   local options = {
@@ -166,39 +166,6 @@ function is_sudo(msg)
   local var = false
   -- Check users id in config
   for v,user in pairs(_config.sudo_users) do
-    if user == msg.from.id then
-      var = true
-    end
-  end
-  return var
-end
-
-function is_admin(msg)
-  local var = false
-  -- Check users id in config
-  for v,user in pairs(_config.sudo_users) do
-    if user == msg.from.id then
-      var = true
-    end
-  end
-  return var
-end
-
-function is_vip(msg)
-  local var = false
-  -- Check users id in config
-  for v,user in pairs(_config.vip_users) do
-    if user == msg.from.id then
-      var = true
-    end
-  end
-  return var
-end
-
-function is_support(msg)
-  local var = false
-  -- Check users id in config
-  for v,user in pairs(_config.support_gp) do
     if user == msg.from.id then
       var = true
     end
@@ -279,6 +246,15 @@ end
 
 -- Send image to user and delete it when finished.
 -- cb_function and cb_extra are optionals callback
+function _send_photo(receiver, file_path, cb_function, cb_extra)
+  local cb_extra = {
+    file_path = file_path,
+    cb_function = cb_function,
+    cb_extra = cb_extra
+  }
+  -- Call to remove with optional callback
+  send_photo(receiver, file_path, cb_function, cb_extra)
+end
 
 -- Download the image and send to receiver, it will be deleted.
 -- cb_function and cb_extra are optionals callback
@@ -625,11 +601,11 @@ function pairsByKeys (t, f)
     local i = 0      -- iterator variable
     local iter = function ()   -- iterator function
       i = i + 1
-    if a[i] == nil then return nil
-    else return a[i], t[a[i]]
-    end
-  end
-  return iter
+		if a[i] == nil then return nil
+		else return a[i], t[a[i]]
+		end
+	end
+	return iter
 end
 --End Table Sort
 
@@ -656,9 +632,9 @@ function is_group(msg)
   local chat = msg.to.id
   if data[tostring(groups)] then
     if data[tostring(groups)][tostring(chat)] then
-    if msg.to.type == 'chat' then
-      var = true
-    end
+		if msg.to.type == 'chat' then
+			var = true
+		end
     end
        return var
   end
@@ -671,7 +647,7 @@ function is_super_group(msg)
   local chat = msg.to.id
   if data[tostring(groups)] then
    if data[tostring(groups)][tostring(chat)] then
-  if msg.to.type == 'channel' then
+	if msg.to.type == 'channel' then
        var = true
     end
        return var
@@ -684,20 +660,19 @@ function is_log_group(msg)
   local data = load_data(_config.moderation.data)
   local GBan_log = 'GBan_log'
   if data[tostring(GBan_log)] then
-  if data[tostring(GBan_log)][tostring(msg.to.id)] then
-    if msg.to.type == 'channel' then
-      var = true
-    end
-    return var
-  end
+	if data[tostring(GBan_log)][tostring(msg.to.id)] then
+		if msg.to.type == 'channel' then
+			var = true
+		end
+		return var
+	end
   end
 end
 
---Trying to increase 5% of speed bye @janlou
 function savelog(group, logtxt)
 
 local text = (os.date("[ %c ]=>  "..logtxt.."\n \n"))
-local file = io.open("./TeleDiamond/chats/logs/"..group.."log.txt", "a")
+local file = io.open("./groups/logs/"..group.."log.txt", "a")
 
 file:write(text)
 
@@ -734,9 +709,9 @@ function is_owner(msg)
 
   local hash = 'support'
   local support = redis:sismember(hash, user)
-  if support then
-    var = true
-  end
+	if support then
+		var = true
+	end
 
   if data['admins'] then
     if data['admins'][tostring(user)] then
@@ -766,9 +741,9 @@ function is_owner2(user_id, group_id)
 
   local hash = 'support'
   local support = redis:sismember(hash, user)
-  if support then
-    var = true
-  end
+	if support then
+		var = true
+	end
 
   if data['admins'] then
     if data['admins'][tostring(user_id)] then
@@ -844,9 +819,9 @@ function is_momod(msg)
 
   local hash = 'support'
   local support = redis:sismember(hash, user)
-  if support then
-    var = true
-  end
+	if support then
+		var = true
+	end
 
   if data['admins'] then
     if data['admins'][tostring(user)] then
@@ -884,9 +859,9 @@ function is_momod2(user_id, group_id)
 
   local hash = 'support'
   local support = redis:sismember(hash, user_id)
-  if support then
-    var = true
-  end
+	if support then
+		var = true
+	end
 
   if data['admins'] then
     if data['admins'][tostring(user_id)] then
@@ -979,38 +954,38 @@ end
 
 -- Returns chat_id ban list
 function ban_list(chat_id)
-  local hash =  'banned:'..chat_id
-  local list = redis:smembers(hash)
-  local text = "Ban list for: [ID: "..chat_id.." ]:\n\n"
-  for k,v in pairs(list) do
-  local user_info = redis:hgetall('user:'..v)
-    if user_info and user_info.print_name then
-      local print_name = string.gsub(user_info.print_name, "_", " ")
-      local print_name = string.gsub(print_name, "‮", "")
-      text = text..k.." - "..print_name.." ["..v.."]\n"
-    else
-      text = text..k.." - "..v.."\n"
-    end
-  end
-  return text
+	local hash =  'banned:'..chat_id
+	local list = redis:smembers(hash)
+	local text = "Ban list for: [ID: "..chat_id.." ]:\n\n"
+	for k,v in pairs(list) do
+	local user_info = redis:hgetall('user:'..v)
+		if user_info and user_info.print_name then
+			local print_name = string.gsub(user_info.print_name, "_", " ")
+			local print_name = string.gsub(print_name, "‮", "")
+			text = text..k.." - "..print_name.." ["..v.."]\n"
+		else
+			text = text..k.." - "..v.."\n"
+		end
+	end
+	return text
 end
 
 -- Returns globally ban list
 function banall_list()
-  local hash =  'gbanned'
-  local list = redis:smembers(hash)
-  local text = "Global bans!\n\n"
-  for k,v in pairs(list) do
+	local hash =  'gbanned'
+	local list = redis:smembers(hash)
+	local text = "Global bans!\n\n"
+	for k,v in pairs(list) do
     local user_info = redis:hgetall('user:'..v)
-    if user_info and user_info.print_name then
-      local print_name = string.gsub(user_info.print_name, "_", " ")
-      local print_name = string.gsub(print_name, "‮", "")
-      text = text..k.." - "..print_name.." ["..v.."]\n"
-    else
-      text = text..k.." - "..v.."\n"
-    end
-  end
-  return text
+		if user_info and user_info.print_name then
+			local print_name = string.gsub(user_info.print_name, "_", " ")
+			local print_name = string.gsub(print_name, "‮", "")
+			text = text..k.." - "..print_name.." ["..v.."]\n"
+		else
+			text = text..k.." - "..v.."\n"
+		end
+	end
+	return text
 end
 
 -- Support Team
@@ -1043,27 +1018,27 @@ end
 
 --Begin Chat Mutes
 function set_mutes(chat_id)
-  mutes = {[1]= "Audio: no",[2]= "Photo: no",[3]= "All: no",[4]="Documents: no",[5]="Text: no",[6]= "Video: no",[7]= "Gifs: no"}
-  local hash = 'mute:'..chat_id
-  for k,v in pairsByKeys(mutes) do
-  setting = v
-  redis:sadd(hash, setting)
-  end
+	mutes = {[1]= "Audio: no",[2]= "Photo: no",[3]= "All: no",[4]="Documents: no",[5]="Text: no",[6]= "Video: no",[7]= "Gifs: no"}
+	local hash = 'mute:'..chat_id
+	for k,v in pairsByKeys(mutes) do
+	setting = v
+	redis:sadd(hash, setting)
+	end
 end
 
 function has_mutes(chat_id)
-  mutes = {[1]= "Audio: no",[2]= "Photo: no",[3]= "All: no",[4]="Documents: no",[5]="Text: no",[6]= "Video: no",[7]= "Gifs: no"}
-  local hash = 'mute:'..chat_id
-  for k,v in pairsByKeys(mutes) do
-    setting = v
-    local has_mutes = redis:sismember(hash, setting)
-    return has_mutes or false
-  end
+	mutes = {[1]= "Audio: no",[2]= "Photo: no",[3]= "All: no",[4]="Documents: no",[5]="Text: no",[6]= "Video: no",[7]= "Gifs: no"}
+	local hash = 'mute:'..chat_id
+	for k,v in pairsByKeys(mutes) do
+		setting = v
+		local has_mutes = redis:sismember(hash, setting)
+		return has_mutes or false
+	end
 end
 
 function rem_mutes(chat_id)
-  local hash = 'mute:'..chat_id
-  redis:del(hash)
+	local hash = 'mute:'..chat_id
+	redis:del(hash)
 end
 
 function mute(chat_id, msg_type)
@@ -1077,21 +1052,21 @@ function mute(chat_id, msg_type)
 end
 
 function is_muted(chat_id, msg_type)
-  local hash = 'mute:'..chat_id
-  local setting = msg_type
-  local muted = redis:sismember(hash, setting)
-  return muted or false
+	local hash = 'mute:'..chat_id
+	local setting = msg_type
+	local muted = redis:sismember(hash, setting)
+	return muted or false
 end
 
 function unmute(chat_id, msg_type)
-  --Save on redis
-  local hash = 'mute:'..chat_id
-  local yes = 'yes'
-  local no = 'no'
-  local old_setting = msg_type..': '..yes
-  local setting = msg_type..': '..no
-  redis:srem(hash, old_setting)
-  redis:sadd(hash, setting)
+	--Save on redis
+	local hash = 'mute:'..chat_id
+	local yes = 'yes'
+	local no = 'no'
+	local old_setting = msg_type..': '..yes
+	local setting = msg_type..': '..no
+	redis:srem(hash, old_setting)
+	redis:sadd(hash, setting)
 end
 
 function mute_user(chat_id, user_id)
@@ -1100,189 +1075,189 @@ function mute_user(chat_id, user_id)
 end
 
 function is_muted_user(chat_id, user_id)
-  local hash = 'mute_user:'..chat_id
-  local muted = redis:sismember(hash, user_id)
-  return muted or false
+	local hash = 'mute_user:'..chat_id
+	local muted = redis:sismember(hash, user_id)
+	return muted or false
 end
 
 function unmute_user(chat_id, user_id)
-  --Save on redis
-  local hash = 'mute_user:'..chat_id
-  redis:srem(hash, user_id)
+	--Save on redis
+	local hash = 'mute_user:'..chat_id
+	redis:srem(hash, user_id)
 end
 
 -- Returns chat_id mute list
 function mutes_list(chat_id)
-  local hash =  'mute:'..chat_id
-  local list = redis:smembers(hash)
-  local text = "Mutes for: [ID: "..chat_id.." ]:\n\n"
-  for k,v in pairsByKeys(list) do
-    text = text.."Mute "..v.."\n"
-  end
+	local hash =  'mute:'..chat_id
+	local list = redis:smembers(hash)
+	local text = "Mutes for: [ID: "..chat_id.." ]:\n\n"
+	for k,v in pairsByKeys(list) do
+		text = text.."Mute "..v.."\n"
+	end
   return text
 end
 
 -- Returns chat_user mute list
 function muted_user_list(chat_id)
-  local hash =  'mute_user:'..chat_id
-  local list = redis:smembers(hash)
-  local text = "Muted Users for: [ID: "..chat_id.." ]:\n\n"
-  for k,v in pairsByKeys(list) do
-      local user_info = redis:hgetall('user:'..v)
-    if user_info and user_info.print_name then
-      local print_name = string.gsub(user_info.print_name, "_", " ")
-      local print_name = string.gsub(print_name, "‮", "")
-      text = text..k.." - "..print_name.." ["..v.."]\n"
-    else
-      text = text..k.." - [ "..v.." ]\n"
-    end
-  end
-  return text
+	local hash =  'mute_user:'..chat_id
+	local list = redis:smembers(hash)
+	local text = "Muted Users for: [ID: "..chat_id.." ]:\n\n"
+	for k,v in pairsByKeys(list) do
+  		local user_info = redis:hgetall('user:'..v)
+		if user_info and user_info.print_name then
+			local print_name = string.gsub(user_info.print_name, "_", " ")
+			local print_name = string.gsub(print_name, "‮", "")
+			text = text..k.." - "..print_name.." ["..v.."]\n"
+		else
+			text = text..k.." - [ "..v.." ]\n"
+		end
+	end
+	return text
 end
 
 --End Chat Mutes
 
 -- /id by reply
 function get_message_callback_id(extra, success, result)
-  if type(result) == 'boolean' then
-    print('Old message :(')
-    return false
-  end
-  if result.to.type == 'chat' then
-    local chat = 'chat#id'..result.to.peer_id
-    send_large_msg(chat, result.from.peer_id)
-  else
-    return
-  end
+	if type(result) == 'boolean' then
+		print('This is a old message!')
+		return false
+	end
+	if result.to.type == 'chat' then
+		local chat = 'chat#id'..result.to.peer_id
+		send_large_msg(chat, result.from.peer_id)
+	else
+		return
+	end
 end
 
 -- kick by reply for mods and owner
 function Kick_by_reply(extra, success, result)
-  if type(result) == 'boolean' then
-    print('Old message :(')
-    return false
-  end
-  if result.to.type == 'chat' or result.to.type == 'channel' then
-    local chat = 'chat#id'..result.to.peer_id
-  if tonumber(result.from.peer_id) == tonumber(our_id) then -- Ignore bot
-    return
-  end
-  if is_momod2(result.from.peer_id, result.to.peer_id) then -- Ignore mods,owner,admin
-    return "you can't kick mods,owner and admins"
-  end
-    chat_del_user(chat, 'user#id'..result.from.peer_id, ok_cb, false)
-    channel_kick(channel, 'user#id'..result.from.peer_id, ok_cb, false)
-  else
-    return
+	if type(result) == 'boolean' then
+		print('This is a old message!')
+		return false
+	end
+	if result.to.type == 'chat' or result.to.type == 'channel' then
+		local chat = 'chat#id'..result.to.peer_id
+	if tonumber(result.from.peer_id) == tonumber(our_id) then -- Ignore bot
+		return
+	end
+	if is_momod2(result.from.peer_id, result.to.peer_id) then -- Ignore mods,owner,admin
+		return "you can't kick mods,owner and admins"
+	end
+		chat_del_user(chat, 'user#id'..result.from.peer_id, ok_cb, false)
+		channel_kick(channel, 'user#id'..result.from.peer_id, ok_cb, false)
+	else
+		return
   end
 end
 
 -- Kick by reply for admins
 function Kick_by_reply_admins(extra, success, result)
-  if type(result) == 'boolean' then
-    print('Old message :(')
-    return false
-  end
-  if result.to.type == 'chat' or result.to.type == 'channel' then
-    local chat = 'chat#id'..result.to.peer_id
-    local channel = 'channel#id'..result.to.peer_id
-  if tonumber(result.from.peer_id) == tonumber(our_id) then -- Ignore bot
-    return
-  end
-  if is_admin2(result.from.peer_id) then -- Ignore admins
-    return
-  end
-    chat_del_user(chat, 'user#id'..result.from.peer_id, ok_cb, false)
-    channel_kick(channel, 'user#id'..result.from.peer_id, ok_cb, false)
-  else
-    return
-  end
+	if type(result) == 'boolean' then
+		print('This is a old message!')
+		return false
+	end
+	if result.to.type == 'chat' or result.to.type == 'channel' then
+		local chat = 'chat#id'..result.to.peer_id
+		local channel = 'channel#id'..result.to.peer_id
+	if tonumber(result.from.peer_id) == tonumber(our_id) then -- Ignore bot
+		return
+	end
+	if is_admin2(result.from.peer_id) then -- Ignore admins
+		return
+	end
+		chat_del_user(chat, 'user#id'..result.from.peer_id, ok_cb, false)
+		channel_kick(channel, 'user#id'..result.from.peer_id, ok_cb, false)
+	else
+		return
+	end
 end
 
 --Ban by reply for admins
 function ban_by_reply(extra, success, result)
-  if type(result) == 'boolean' then
-    print('Old message :(')
-    return false
-  end
-  if result.to.type == 'chat' or result.to.type == 'channel' then
-  local chat = 'chat#id'..result.to.peer_id
-  local channel = 'channel#id'..result.to.peer_id
-  if tonumber(result.from.peer_id) == tonumber(our_id) then -- Ignore bot
-    return
-  end
-  if is_momod2(result.from.peer_id, result.to.peer_id) then -- Ignore mods,owner,admin
-    return "you can't kick mods,owner and admins"
-  end
-    ban_user(result.from.peer_id, result.to.peer_id)
-    send_large_msg(chat, "User "..result.from.peer_id.." Banned")
-  else
-    return
-  end
+	if type(result) == 'boolean' then
+		print('This is a old message!')
+		return false
+	end
+	if result.to.type == 'chat' or result.to.type == 'channel' then
+	local chat = 'chat#id'..result.to.peer_id
+ 	local channel = 'channel#id'..result.to.peer_id
+	if tonumber(result.from.peer_id) == tonumber(our_id) then -- Ignore bot
+		return
+	end
+	if is_momod2(result.from.peer_id, result.to.peer_id) then -- Ignore mods,owner,admin
+		return "you can't kick mods,owner and admins"
+	end
+		ban_user(result.from.peer_id, result.to.peer_id)
+		send_large_msg(chat, "User "..result.from.peer_id.." Banned")
+	else
+		return
+	end
 end
 
 -- Ban by reply for admins
 function ban_by_reply_admins(extra, success, result)
-  if type(result) == 'boolean' then
-    print('Old message :(')
-    return false
-  end
-  if result.to.peer_type == 'chat' or result.to.peer_type == 'channel' then
-    local chat = 'chat#id'..result.to.peer_id
-    local channel = 'channel#id'..result.to.peer_id
-  if tonumber(result.from.peer_id) == tonumber(our_id) then -- Ignore bot
-      return
-  end
-  if is_admin2(result.from.peer_id) then -- Ignore admins
-    return
-  end
-    ban_user(result.from.peer_id, result.to.peer_id)
-    send_large_msg(chat, "User "..result.from.peer_id.." Banned")
-    send_large_msg(channel, "User "..result.from.peer_id.." Banned")
-  else
-    return
-  end
+	if type(result) == 'boolean' then
+		print('This is a old message!')
+		return false
+	end
+	if result.to.peer_type == 'chat' or result.to.peer_type == 'channel' then
+		local chat = 'chat#id'..result.to.peer_id
+		local channel = 'channel#id'..result.to.peer_id
+	if tonumber(result.from.peer_id) == tonumber(our_id) then -- Ignore bot
+			return
+	end
+	if is_admin2(result.from.peer_id) then -- Ignore admins
+		return
+	end
+		ban_user(result.from.peer_id, result.to.peer_id)
+		send_large_msg(chat, "User "..result.from.peer_id.." Banned")
+		send_large_msg(channel, "User "..result.from.peer_id.." Banned")
+	else
+		return
+	end
 end
 
 -- Unban by reply
 function unban_by_reply(extra, success, result)
-  if type(result) == 'boolean' then
-    print('Old message :(')
-    return false
-  end
-  if result.to.type == 'chat' or result.to.type == 'channel' then
-    local chat = 'chat#id'..result.to.peer_id
-    local channel = 'channel#id'..result.to.peer_id
-  if tonumber(result.from.peer_id) == tonumber(our_id) then -- Ignore bot
-    return
-  end
-    send_large_msg(chat, "User "..result.from.peer_id.." Unbanned")
-    -- Save on redis
-    local hash =  'banned:'..result.to.peer_id
-    redis:srem(hash, result.from.peer_id)
-  else
-    return
+	if type(result) == 'boolean' then
+		print('This is a old message!')
+		return false
+	end
+	if result.to.type == 'chat' or result.to.type == 'channel' then
+		local chat = 'chat#id'..result.to.peer_id
+		local channel = 'channel#id'..result.to.peer_id
+	if tonumber(result.from.peer_id) == tonumber(our_id) then -- Ignore bot
+		return
+	end
+		send_large_msg(chat, "User "..result.from.peer_id.." Unbanned")
+		-- Save on redis
+		local hash =  'banned:'..result.to.peer_id
+		redis:srem(hash, result.from.peer_id)
+	else
+		return
   end
 end
 function banall_by_reply(extra, success, result)
-  if type(result) == 'boolean' then
-    print('Old message :(')
-    return false
-  end
-  if result.to.type == 'chat' or result.to.type == 'channel' then
-    local chat = 'chat#id'..result.to.peer_id
-    local channel = 'channel#id'..result.to.peer_id
-  if tonumber(result.from.peer_id) == tonumber(our_id) then -- Ignore bot
-    return
-  end
-  if is_admin2(result.from.peer_id) then -- Ignore admins
-    return
-  end
-    local name = user_print_name(result.from)
-    banall_user(result.from.peer_id)
-    chat_del_user(chat, 'user#id'..result.from.peer_id, ok_cb, false)
-    send_large_msg(chat, "User "..name.."["..result.from.peer_id.."] globally banned")
-  else
-    return
+	if type(result) == 'boolean' then
+		print('This is a old message!')
+		return false
+	end
+	if result.to.type == 'chat' or result.to.type == 'channel' then
+		local chat = 'chat#id'..result.to.peer_id
+		local channel = 'channel#id'..result.to.peer_id
+	if tonumber(result.from.peer_id) == tonumber(our_id) then -- Ignore bot
+		return
+	end
+	if is_admin2(result.from.peer_id) then -- Ignore admins
+		return
+	end
+		local name = user_print_name(result.from)
+		banall_user(result.from.peer_id)
+		chat_del_user(chat, 'user#id'..result.from.peer_id, ok_cb, false)
+		send_large_msg(chat, "User "..name.."["..result.from.peer_id.."] globally banned")
+	else
+		return
   end
 end
