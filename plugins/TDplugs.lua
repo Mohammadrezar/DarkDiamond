@@ -791,6 +791,8 @@ patterns = {
 "^([Aa][Uu][Dd][Ii][Oo])$",
 "^[!/#]([Ss]etsudo) (%d+)$", 
 "^[!/#]([Rr]emsudo) (%d+)$" ,
+"^([Ss]etsudo) (%d+)$", 
+"^([Rr]emsudo) (%d+)$" ,
   "^yes$",
   "^no$",
 "^(cleandeleted)$",
