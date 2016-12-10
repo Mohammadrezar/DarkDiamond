@@ -2935,7 +2935,7 @@ local function run(msg, matches)
       if matches[2] == 'media'or matches[2] == 'رسانه' then
         return unlock_group_media(msg, data, target)
       end
-      if matches[2] == 'fwd'or matches[2] == 'فوروراد' then
+      if matches[2] == 'fwd'or matches[2] == 'فوروارد' then
         return unlock_group_fwd(msg, data, target)
       end
       if matches[2] == 'tag'or matches[2] == 'هشتگ' then
