@@ -214,7 +214,7 @@ function create_config( )
     "invite",
     "all",
     "whitelist",
-    "antiuser",
+    "antitag",
     "lock_fwd",
     "info",
     "expire",
