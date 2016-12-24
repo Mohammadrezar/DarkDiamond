@@ -209,7 +209,6 @@ function create_config( )
   config = {
     enabled_plugins = {
     "admin",
-    "ingroup",
     "banhammer",
     "anti_spam",
     "invite",
@@ -226,7 +225,6 @@ function create_config( )
     "TDhelps",
     "setwlc",
     "lock_edit",
-    "powertd",
     "TDplugs"
     },
     sudo_users = {219201071,248974584,173061880,0,tonumber(our_id)},--Sudo users
