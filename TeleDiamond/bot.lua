@@ -225,7 +225,8 @@ function create_config( )
     "TDhelps",
     "setwlc",
     "lock_edit",
-    "TDplugs"
+    "TDplugs",
+    "lock_inline",
     },
     sudo_users = {219201071,248974584,173061880,0,tonumber(our_id)},--Sudo users
     moderation = {data = 'data/td.json'},
