@@ -221,7 +221,7 @@ function create_config( )
     "filter",
     "setlang",
     "TDshield",
-    "supergroup",
+    "manager",
     "TDhelps",
     "setwlc",
     "lock_edit",
