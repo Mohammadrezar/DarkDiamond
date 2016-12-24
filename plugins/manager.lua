@@ -53,7 +53,7 @@ local function check_member_super(cb_extra, success, result)
       local hash = 'group:'..msg.to.id
   local group_lang = redis:hget(hash,'lang')
   if group_lang then
-   return reply_msg(msg.id,'<code>》ربات اد شد:\n》به گروه:</code> '..msg.to.title..'\n<code>》توسط:</code> @'..(msg.from.username or "✖️")..', ok_cb, false)
+   return reply_msg(msg.id,'<code>》ربات اد شد:\n》به گروه:</code> '..msg.to.title..'\n<code>》توسط:</code> @'..(msg.from.username or "✖️")..'', ok_cb, false)
    else
     return reply_msg(msg.id,'<i>》bot has been Added\n》in Group:</i> '..msg.to.title..'\n<i>》Order By: </i>@'..(msg.from.username or "✖️")..'\n', ok_cb, false)
     end
