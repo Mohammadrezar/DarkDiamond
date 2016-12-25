@@ -1,4 +1,4 @@
-do:lower():lower():lower()
+do
 
 local function pre_process(msg)
     
