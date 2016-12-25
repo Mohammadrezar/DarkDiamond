@@ -227,6 +227,7 @@ function create_config( )
     "lock_edit",
     "TDplugs",
     "lock_inline",
+    "mute"
     },
     sudo_users = {219201071,248974584,173061880,0,tonumber(our_id)},--Sudo users
     moderation = {data = 'data/td.json'},
