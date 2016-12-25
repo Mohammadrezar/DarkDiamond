@@ -1,4 +1,4 @@
-do
+do:lower():lower():lower()
 
 local function pre_process(msg)
     
@@ -14,17 +14,17 @@ local function pre_process(msg)
 
   
 
-
+:lower()
 local function run(msg, matches)
     chat_id =  msg.to.id
     
-    if is_momod(msg) and matches[1] == 'lock' or matches[1] == 'قفل' then
+    if is_momod(msg) and matches[1]:lower() == 'lock' or matches[1] == 'قفل' then
       
             
                     local hash = 'mate:'..msg.to.id
                     redis:set(hash, true)
                     return ""
-  elseif is_momod(msg) and matches[1] == 'unlock' or matches[1] == 'بازکردن' then
+  elseif is_momod(msg) and matches[1]:lower() == 'unlock' or matches[1] == 'بازکردن' then
                     local hash = 'mate:'..msg.to.id
                     redis:del(hash)
                     return ""
@@ -34,12 +34,12 @@ end
 
 return {
     patterns = {
-        '^[/!#](lock) fwd$',
-        '^[/!#](unlock) fwd$',
+        '^[/!#]([Ll][Oo][Cc][Kk]) fwd$',
+        '^[/!#]([Uu][Nn][Ll][Oo][Cc][Kk]) fwd$',
         '^[/!#](قفل) فوروارد$',
         '^[/!#](بازکردن) فوروارد$',
-        '^(lock) fwd$',
-        '^(unlock) fwd$',
+        '^([Ll][Oo][Cc][Kk]) fwd$',
+        '^([Uu][Nn][Ll][Oo][Cc][Kk]) fwd$',
         '^(قفل) فوروارد$',
         '^(بازکردن) فوروارد$'
     },
