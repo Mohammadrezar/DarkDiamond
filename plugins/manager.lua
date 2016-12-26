@@ -2631,7 +2631,7 @@ local function run(msg, matches)
 				return lock_group_arabic(msg, data, target)
 			end
 			if matches[2] == 'member'or matches[2] == 'ممبر' then
-				return lock_group_membe(msg, data, target)
+				return lock_group_member(msg, data, target)
 			end
 			if matches[2] == 'tgservice'or matches[2] == 'ورودوخروج' then
 				return lock_group_tgservice(msg, data, target)
