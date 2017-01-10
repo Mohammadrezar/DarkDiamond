@@ -30,7 +30,7 @@ NONVOLUNTARYCHECK=0
 VOLUNTARY=1
 VOLUNTARYCHECK=0
 I=1
-BOT=mohammadwolf
+BOT=darkdiamond
 RELOADTIME=10 
 
 function tmux_mode {
