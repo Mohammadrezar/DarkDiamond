@@ -624,7 +624,7 @@ channel_get_users(receiver, check_member_super_deleted,{receiver = receiver, msg
  end
 -- serverinfo
     if matches[1] == "serverinfo" and is_sudo(msg) then
-     local f = io.popen("sh /root/mohammadwolf/plugins/tdserver.sh") 
+     local f = io.popen("sh /root/darkdiamond/plugins/tdserver.sh") 
      return ( f:read("*a") ) 
   end
 
@@ -714,8 +714,7 @@ end
 	   leave_channel(receiver, ok_cb, false)
     end
 -- del plug
-local mohammad = 219201071
-if matches[1]:lower() == "delplugin" and msg.from.id == tonumber(mohammad) then
+if matches[1]:lower() == "delplugin" and is_sudo(msg) then
 	      if not is_sudo(msg) then 
              return "<i>You Are Not Allow To Delete Plugins!</i>"
              end 
