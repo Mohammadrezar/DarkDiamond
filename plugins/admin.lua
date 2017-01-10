@@ -261,7 +261,7 @@ end
 	if matches[1] == 'reload' then
 		receiver = get_receiver(msg)
 		reload_plugins(true)
-		post_msg(receiver, "<i>>>تمامی پلاگین ها ریلود شدند</i>, ok_cb, false)
+		post_msg(receiver, "<i>>>تمامی پلاگین ها ریلود شدند</i>", ok_cb, false)
 		return "Reloaded!"
 	end
 	--[[*For Debug*
