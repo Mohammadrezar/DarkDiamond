@@ -261,8 +261,8 @@ end
 	if matches[1] == 'reload' then
 		receiver = get_receiver(msg)
 		reload_plugins(true)
-		post_msg(receiver, "<i>>>تمامی پلاگین ها ریلود شدند</i>", ok_cb, false)
-		return "Reloaded!"
+		post_msg(receiver, ">>تمامی پلاگین ها ریلود شدند", ok_cb, false)
+		return ""
 	end
 	--[[*For Debug*
 	if matches[1] == "vardumpmsg" and is_admin1(msg) then
