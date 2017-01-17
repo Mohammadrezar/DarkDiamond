@@ -10,7 +10,7 @@ git clone http://github.com/Mohammadrezar/darkdiamond.git && cd darkdiamond && c
 # >> آموزش فعال سازی اتولانچ
 # کدهای زیر را بترتیب وارد کنید
 ```
-sed -i "s/root/$(whoami)/g" etc/pika.conf; sed -i "s_telegrambotpath_$(pwd)_g" etc/pika.conf && sudo cp etc/pika.conf /etc/init/ && chmod 777 pika && nohup ./pika &>/dev/null &
+cd darkdiamond && sed -i "s/root/$(whoami)/g" etc/pika.conf; sed -i "s_telegrambotpath_$(pwd)_g" etc/pika.conf && sudo cp etc/pika.conf /etc/init/ && chmod 777 pika && nohup ./pika &>/dev/null &
 ```
 ```
 sudo start pika
