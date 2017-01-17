@@ -5,6 +5,9 @@
 git clone http://github.com/Mohammadrezar/darkdiamond.git && cd darkdiamond && chmod +x launch.sh && ./launch.sh install && ./launch.sh
 ```
 # سپس شماره خود را با کد کشور مورد نظر وارد کنید
+
+# ادیت تیجی برای اتالیک و بلود بودن سورس
+# [برای آموزش ادیت تیجی کلیک کنید](https://telegram.me/TeleDiamondCh/927)
 # سپس خود را سودو کرده و اتولانچ یا لانچر را فعال کنید
 
 # >> آموزش فعال سازی اتولانچ
