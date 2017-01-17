@@ -5,7 +5,7 @@
 git clone http://github.com/Mohammadrezar/darkdiamond.git && cd darkdiamond && chmod +x launch.sh && ./launch.sh install && ./launch.sh
 ```
 # سپس شماره خود را با کد کشور مورد نظر وارد کنید
-# سپس خود را سودو کرده و اتولان چ یا لانچر را فعال کنید
+# سپس خود را سودو کرده و اتولانچ یا لانچر را فعال کنید
 
 # >> آموزش فعال سازی اتولانچ
 # کدهای زیر را بترتیب وارد کنید
@@ -32,7 +32,14 @@ cd darkdiamond
 
 tmux new-session -s script "bash steady.sh -t"
 ```
+# درصورت خاموش شدن برای لانچ
+```
+cd darkdiamond
 
+killall tmux
+
+tmux new-session -s script "bash steady.sh -t"
+```
 # برای یوزرغیر روت لانچر توصیه میشه 
 
 # آموزش های بیشتر در کانال ما
