@@ -2,7 +2,13 @@
 
 # برای نصب کد زیر را در ترمینال وارد کنید
 ```
-git clone http://github.com/Mohammadrezar/darkdiamond.git && cd darkdiamond && chmod +x launch.sh && ./launch.sh install && ./launch.sh
+git clone http://github.com/Mohammadrezar/darkdiamond.git && cd darkdiamond && chmod +x launch.sh && ./launch.sh install
+```
+
+#سپس
+```
+cd tg && git clone http://github.com/Mohammadrezar/fix && cp fix/lua-tg.c lua-tg.c && make && cd .. && ./launch.sh
+
 ```
 # سپس شماره خود را با کد کشور مورد نظر وارد کنید
 
