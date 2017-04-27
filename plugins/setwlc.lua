@@ -11,8 +11,8 @@ if matches[1] == 'delwlc' and not matches[2] and is_owner(msg) then
         return '<i>متن خوش آمد گویی پاک شد</i>'
 end
 
-local url , res = http.request('http://api.gpmod.ir/time/')
-if res ~= 200 then return "No connection" end
+local url , res = http.request('http://irapi.ir/time/')
+if res ~= 200 then return "" end
 local jdat = json:decode(url)
 
 if matches[1] == 'setwlc' and is_owner(msg) then
