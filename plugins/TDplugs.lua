@@ -461,7 +461,7 @@ if matches[1]:lower() == 'weather' and is_momod(msg) or matches[1] == 'هواش�
 end
 -- time
 if matches[1]:lower() == 'time' and is_momod(msg) or matches[1] == 'زمان' and is_momod(msg) then
-local url , res = http.request('http://api.gpmod.ir/time/')
+local url , res = http.request('http://irapi.ir/time/')
 if res ~= 200 then
  return "No connection"
   end
